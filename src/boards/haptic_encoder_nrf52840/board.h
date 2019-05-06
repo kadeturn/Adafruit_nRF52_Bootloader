@@ -57,11 +57,8 @@
 #define BLEDIS_MODEL          "3Dx Haptic Encoder Dev"
 
 //------------- UF2 -------------//
-#define BLEDIS_MANUFACTURER    "3Dx"
-#define BLEDIS_MODEL           "HAPTIC_ENCODER"
-
 #define UF2_PRODUCT_NAME    "3Dx Haptic Encoder Dev"
-#define UF2_VOLUME_LABEL   "F3Dx52840BOOT"
+#define UF2_VOLUME_LABEL   "F3Dx840BOOT"
 #define UF2_BOARD_ID        "nRF52840-haptic_encoder"
 #define UF2_INDEX_URL       "https://www.3dconnexion.com"
 
