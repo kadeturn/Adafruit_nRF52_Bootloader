@@ -39,8 +39,8 @@
 /* BUTTON
  *------------------------------------------------------------------*/
 #define BUTTONS_NUMBER        2
-#define BUTTON_1              _PINNUM(1, 02)
-#define BUTTON_2              _PINNUM(0, 16)
+#define BUTTON_1              _PINNUM(0, 19)
+#define BUTTON_2              _PINNUM(0, 21)
 #define BUTTON_PULL           NRF_GPIO_PIN_PULLUP
 
 /*------------------------------------------------------------------*/
@@ -58,7 +58,7 @@
 
 //------------- UF2 -------------//
 #define UF2_PRODUCT_NAME    "3Dx Haptic Encoder Dev"
-#define UF2_VOLUME_LABEL   "F3Dx840BOOT"
+#define UF2_VOLUME_LABEL   "3Dx840BOOT"
 #define UF2_BOARD_ID        "nRF52840-haptic_encoder"
 #define UF2_INDEX_URL       "https://www.3dconnexion.com"
 

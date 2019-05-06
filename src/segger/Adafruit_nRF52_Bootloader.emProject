@@ -96,6 +96,7 @@
         <file file_name="../boards/feather_nrf52832.h" />
         <file file_name="../boards/feather_nrf52840_express.h" />
         <file file_name="../boards/pca10059.h" />
+		<file file_name="../boards/haptic_encoder_nrf52840.h" />
       </folder>
       <file file_name="../dfu_init.c" />
       <file file_name="../boards.c" />
@@ -331,6 +332,7 @@
               Name="Feather52840"
               build_exclude_from_build="Yes" />
             <configuration Name="PCA10056" build_exclude_from_build="Yes" />
+			<configuration Name="Haptic52840" build_exclude_from_build="Yes" />
           </file>
           <file file_name="../../lib/nrfx/mdk/ses_startup_nrf52840.s">
             <configuration
@@ -354,6 +356,7 @@
               Name="Feather52840"
               build_exclude_from_build="Yes" />
             <configuration Name="PCA10056" build_exclude_from_build="Yes" />
+			<configuration Name="Haptic52840" build_exclude_from_build="Yes" />
           </file>
           <file file_name="../../lib/nrfx/mdk/system_nrf52.h" />
           <file file_name="../../lib/nrfx/mdk/system_nrf52840.c">
@@ -391,8 +394,15 @@
       c_user_include_directories=".;../boards/pca10056"
       gcc_optimization_level="Debug"
       linker_memory_map_file="nRF52840_xxAA_MemoryMap.xml" />
+	<configuration
+      Name="Haptic52840"
+      c_preprocessor_definitions="NRF52840_XXAA;S140"
+      c_user_include_directories=".;../boards/haptic_encoder_nrf52840"
+      gcc_optimization_level="Debug"
+      linker_memory_map_file="nRF52840_xxAA_MemoryMap.xml" />
   </project>
   <configuration Name="Feather52840" />
   <configuration Name="Feather52832" />
   <configuration Name="PCA10056" />
+  <configuration Name="Haptic52840" />
 </solution>
