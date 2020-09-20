@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _HAPTIC_ENCODER_NRF52840_H
-#define _HAPTIC_ENCODER_NRF52840_H
+#ifndef _ENCODER_DEV_NRF52840_H
+#define _ENCODER_DEV_NRF52840_H
 
 #define _PINNUM(port, pin)    ((port)*32 + (pin))
 
@@ -44,7 +44,7 @@
 #define BUTTON_PULL           NRF_GPIO_PIN_PULLUP
 
 /*------------------------------------------------------------------*/
-/* UART
+/* UART (only used by nRF52832)
  *------------------------------------------------------------------*/
 #define RX_PIN_NUMBER         8
 #define TX_PIN_NUMBER         6
@@ -52,14 +52,23 @@
 #define RTS_PIN_NUMBER        0
 #define HWFC                  false
 
-// Used as model string in OTA mode
-#define BLEDIS_MANUFACTURER   "3Dx"
-#define BLEDIS_MODEL          "3Dx Haptic Encoder Dev"
+//--------------------------------------------------------------------+
+// BLE OTA
+//--------------------------------------------------------------------+
+#define BLEDIS_MANUFACTURER   "kadeturn"
+#define BLEDIS_MODEL          "Encoder Dev"
+
+//--------------------------------------------------------------------+
+// USB
+//--------------------------------------------------------------------+
+#define USB_DESC_VID           0x239A
+#define USB_DESC_UF2_PID       0x0029
+#define USB_DESC_CDC_ONLY_PID  0x002A
 
 //------------- UF2 -------------//
-#define UF2_PRODUCT_NAME    "3Dx Haptic Encoder Dev"
-#define UF2_VOLUME_LABEL   "3Dx840BOOT"
-#define UF2_BOARD_ID        "nRF52840-haptic_encoder"
-#define UF2_INDEX_URL       "https://www.3dconnexion.com"
+#define UF2_PRODUCT_NAME    "Encoder Dev"
+#define UF2_VOLUME_LABEL    "52840BOOT"
+#define UF2_BOARD_ID        "nRF52840-encoder_dev"
+#define UF2_INDEX_URL       "https://github.com/kadeturn/Adafruit_nRF52_Bootloader"
 
-#endif // _FEATHER_NRF52840_H
+#endif // _ENCODER_DEV_NRF52840_H
