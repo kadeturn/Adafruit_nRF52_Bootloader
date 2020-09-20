@@ -33,9 +33,11 @@
 #define LEDS_NUMBER           2
 #define LED_PRIMARY_PIN       _PINNUM(1, 13)
 #define LED_SECONDARY_PIN     _PINNUM(1, 15)
-#define LED_NEOPIXEL          _PINNUM(0, 13)
-#define BOARD_RGB_BRIGHTNESS  0x040404
 #define LED_STATE_ON          1
+
+#define LED_NEOPIXEL          _PINNUM(0, 13)
+#define NEOPIXELS_NUMBER      1
+#define BOARD_RGB_BRIGHTNESS  0x040404
 
 /*------------------------------------------------------------------*/
 /* BUTTON
@@ -46,7 +48,7 @@
 #define BUTTON_PULL           NRF_GPIO_PIN_PULLUP
 
 /*------------------------------------------------------------------*/
-/* UART
+/* UART (only used by nRF52832)
  *------------------------------------------------------------------*/
 #define RX_PIN_NUMBER         8
 #define TX_PIN_NUMBER         6

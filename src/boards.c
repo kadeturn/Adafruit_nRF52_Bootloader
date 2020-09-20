@@ -34,18 +34,28 @@
 #define SCHED_QUEUE_SIZE                    30                               /**< Maximum number of events in the scheduler queue. */
 
 #if defined(LED_NEOPIXEL) || defined(LED_RGB_RED_PIN)
+  void neopixel_init(void);
   void neopixel_write(uint8_t *pixels);
+  void neopixel_teardown(void);
 #endif
 
 //------------- IMPLEMENTATION -------------//
 void button_init(uint32_t pin)
 {
-  nrf_gpio_cfg_sense_input(pin, BUTTON_PULL, NRF_GPIO_PIN_SENSE_LOW);
+  if ( BUTTON_PULL == NRF_GPIO_PIN_PULLDOWN )
+  {
+    nrf_gpio_cfg_sense_input(pin, BUTTON_PULL, NRF_GPIO_PIN_SENSE_HIGH);
+  }
+  else
+  {
+    nrf_gpio_cfg_sense_input(pin, BUTTON_PULL, NRF_GPIO_PIN_SENSE_LOW);
+  }
 }
 
 bool button_pressed(uint32_t pin)
 {
-  return (nrf_gpio_pin_read(pin) == 0) ? true : false;
+  uint32_t const active_state = (BUTTON_PULL == NRF_GPIO_PIN_PULLDOWN ? 1 : 0);
+  return nrf_gpio_pin_read(pin) == active_state;
 }
 
 void board_init(void)
@@ -67,9 +77,8 @@ void board_init(void)
   led_pwm_init(LED_SECONDARY, LED_SECONDARY_PIN);
   #endif
 
-// use neopixel for use enumeration
+  // use neopixel for use enumeration
 #if defined(LED_NEOPIXEL) || defined(LED_RGB_RED_PIN)
-  extern void neopixel_init(void);
   neopixel_init();
 #endif
 
@@ -93,10 +102,8 @@ void board_teardown(void)
   led_pwm_teardown();
 
 #if defined(LED_NEOPIXEL) || defined(LED_RGB_RED_PIN)
-  extern void neopixel_teardown(void);
   neopixel_teardown();
 #endif
-  // Button
 
   // Stop RTC1 used by app_timer
   NVIC_DisableIRQ(RTC1_IRQn);
@@ -107,6 +114,13 @@ void board_teardown(void)
 
   // Stop LF clock
   NRF_CLOCK->TASKS_LFCLKSTOP = 1UL;
+
+  // make sure all pins are back in reset state
+  // NUMBER_OF_PINS is defined in nrf_gpio.h
+  for (int i = 0; i < NUMBER_OF_PINS; ++i)
+  {
+    nrf_gpio_cfg_default(i);
+  }
 }
 
 static uint32_t _systick_count = 0;
@@ -297,9 +311,9 @@ void led_state(uint32_t state)
 #define MAGIC_T1H              13UL | (0x8000) // 0.8125us
 #define CTOPVAL                20UL            // 1.25us
 
-#define NEO_NUMBYTE  3
+#define BYTE_PER_PIXEL  3
 
-static uint16_t pixels_pattern[NEO_NUMBYTE * 8 + 2];
+static uint16_t pixels_pattern[NEOPIXELS_NUMBER*BYTE_PER_PIXEL * 8 + 2];
 
 // use PWM1 for neopixel
 void neopixel_init(void)
@@ -347,29 +361,35 @@ void neopixel_init(void)
 
 void neopixel_teardown(void)
 {
-  uint8_t grb[3] = { 0, 0, 0 };
+  uint8_t rgb[3] = { 0, 0, 0 };
 
   NRFX_DELAY_US(50);  // wait for previous write is complete
 
-  neopixel_write(grb);
+  neopixel_write(rgb);
   NRFX_DELAY_US(50);  // wait for this write
 
   pwm_teardown(NRF_PWM1);
 }
 
-// write 3 bytes color to a built-in neopixel
+// write 3 bytes color RGB to built-in neopixel
 void neopixel_write (uint8_t *pixels)
 {
-  uint8_t grb[NEO_NUMBYTE] = {pixels[1], pixels[2], pixels[0]};
+  // convert RGB to GRB
+  uint8_t grb[BYTE_PER_PIXEL] = {pixels[1], pixels[2], pixels[0]};
   uint16_t pos = 0;    // bit position
-  for ( uint16_t n = 0; n < NEO_NUMBYTE; n++ )
-  {
-    uint8_t pix = grb[n];
 
-    for ( uint8_t mask = 0x80; mask > 0; mask >>= 1 )
+  // Set all neopixel to same value
+  for (uint16_t n = 0; n < NEOPIXELS_NUMBER; n++ )
+  {
+    for(uint8_t c = 0; c < BYTE_PER_PIXEL; c++)
     {
-      pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
-      pos++;
+      uint8_t const pix = grb[c];
+
+      for ( uint8_t mask = 0x80; mask > 0; mask >>= 1 )
+      {
+        pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
+        pos++;
+      }
     }
   }
 
@@ -409,8 +429,8 @@ void neopixel_init(void)
 
 void neopixel_teardown(void)
 {
-  uint8_t grb[3] = { 0, 0, 0 };
-  neopixel_write(grb);
+  uint8_t rgb[3] = { 0, 0, 0 };
+  neopixel_write(rgb);
   nrf_gpio_cfg_default(LED_RGB_RED_PIN);
   nrf_gpio_cfg_default(LED_RGB_GREEN_PIN);
   nrf_gpio_cfg_default(LED_RGB_BLUE_PIN);
